@@ -1,0 +1,41 @@
+server:
+  port: 8888
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.64.128:8848
+    gateway:
+      routes:
+        - id: cms-route
+          uri: lb://context
+          predicates:
+            - Path=/api/context/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: qms-route # 题目微服务路由
+          uri: lb://question
+          predicates:
+            - Path=/api/question/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: ums-route # 用户微服务路由
+          uri: lb://member
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: oss-route # oss服务路由
+          uri: lb://oss
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: renrenfast-route # 人人后台服务路由
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+  application:
+    name: gateway
