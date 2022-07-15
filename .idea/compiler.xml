@@ -2,27 +2,42 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="context" />
+        <module name="getway" />
         <module name="question" />
+        <module name="common" />
+        <module name="context" />
         <module name="member" />
+        <module name="renren-fast" />
+        <module name="renren-generator" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bookManager1" target="1.8" />
+      <module name="common" target="8" />
       <module name="context" target="1.8" />
+      <module name="excel-poi" target="8" />
+      <module name="getway" target="1.8" />
       <module name="member" target="1.8" />
       <module name="question" target="1.8" />
+      <module name="renren-fast" target="1.8" />
+      <module name="renren-generator" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common" options="-parameters" />
       <module name="context" options="-parameters" />
+      <module name="excel-poi" options="-parameters" />
+      <module name="getway" options="-parameters" />
       <module name="member" options="-parameters" />
       <module name="question" options="-parameters" />
+      <module name="renren-fast" options="-parameters" />
+      <module name="renren-generator" options="-parameters" />
     </option>
   </component>
 </project>
