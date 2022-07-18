@@ -4,9 +4,12 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.offcn.question.entity.TypeEntity;
+import com.offcn.question.service.TypeService;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +35,22 @@ import javax.servlet.http.HttpServletResponse;
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private TypeService typeService;
+    //获取按照题库分类的统计数据
+    @RequestMapping("countTypeQuestion")
+    public R countTypeQuestion(){
+        List<Map<String, Object>> mapList = questionService.countTypeNum();
+        for (Map<String, Object> map : mapList) {
 
+            //根据分类id，读取对应的分类数据
+            Long typeId = (Long) map.get("name");
+            TypeEntity typeEntity = typeService.getById(typeId);
+            //重新封装分类名称到map
+            map.put("name",typeEntity.getType());
+        }
+        return R.ok().put("mapList",mapList);
+    }
     //题目上传导入
     @PostMapping("/upload")
     public R upload(MultipartFile file){

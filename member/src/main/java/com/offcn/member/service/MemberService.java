@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.offcn.common.utils.PageUtils;
 import com.offcn.member.entity.MemberEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,8 @@ import java.util.Map;
 public interface MemberService extends IService<MemberEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    public List<Map<String, Object>> countByDateTime(String beginTime, String endTime);
+    public MemberEntity login(String username,String password);
 }
 

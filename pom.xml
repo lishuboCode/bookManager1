@@ -12,6 +12,7 @@
         <module>renren-generator</module>
         <module>common</module>
         <module>getway</module>
+        <module>oss-service</module>
     </modules>
 
     <parent>

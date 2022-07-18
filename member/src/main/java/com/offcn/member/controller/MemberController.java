@@ -1,15 +1,17 @@
 package com.offcn.member.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.offcn.common.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import com.offcn.member.entity.MemberEntity;
 import com.offcn.member.service.MemberService;
@@ -30,7 +32,55 @@ import com.offcn.common.utils.R;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
+    //根据开始时间，结束时间，统计每日注册账号
+    @RequestMapping("countAccountCreate")
+    public R countAccountCreate(String beginTime,String endTime){
+            List<Map<String, Object>> mapList = memberService.countByDateTime(beginTime, endTime);
+        return R.ok().put("mapList",mapList);
+    }
+
+    //登录
+    @PostMapping("/login")
+    public R login(String username,String password){
+        MemberEntity memberEntity = memberService.login(username, password);
+
+        if(memberEntity!=null) {
+            String token = JWTUtil.generateToken(memberEntity.getUserName());
+            //生成refreshToken
+            String refreshToken = UUID.randomUUID().toString().replace("-", "");
+            stringRedisTemplate.opsForHash().put(refreshToken, "token", token);
+            stringRedisTemplate.opsForHash().put(refreshToken, "username", username);
+            //设置token的过期时间
+            stringRedisTemplate.expire(refreshToken, JWTUtil.REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+
+            return R.ok().put("token",token).put("refreshToken",refreshToken);
+
+        }else {
+            return R.error("账号密码错误");
+
+        }
+
+
+    }
+
+    //刷新token
+    @PostMapping("/refreshtoken")
+    public R refreshToken(String refreshToken){
+        //根据refreshToken从redis读取用户名
+        String username= (String) stringRedisTemplate.boundHashOps(refreshToken).get("username");
+
+        if(StringUtils.isEmpty(username)){
+            return R.error("刷新token失败");
+        }
+        //根据用户名生成新的token
+        String token = JWTUtil.generateToken(username);
+        //更新token到redis
+        stringRedisTemplate.boundHashOps(refreshToken).put("token",token);
+        return R.ok().put("token",token).put("refreshToken",refreshToken);
+    }
     /**
      * 列表
      */

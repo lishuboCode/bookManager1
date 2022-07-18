@@ -25,10 +25,13 @@ import com.offcn.question.entity.QuestionEntity;
 import com.offcn.question.service.QuestionService;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+
 
 @Service("questionService")
 public class QuestionServiceImpl extends ServiceImpl<QuestionDao, QuestionEntity> implements QuestionService {
-
+    @Resource
+    private QuestionDao questionDao;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<QuestionEntity> page = this.page(
@@ -148,6 +151,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionDao, QuestionEntity
         }
 
         return workbook;
+    }
+
+    @Override
+    public List<Map<String, Object>> countTypeNum() {
+        QueryWrapper<QuestionEntity> queryWrapper = new QueryWrapper<QuestionEntity>().select("type as name,COUNT(type) AS num").groupBy("type");
+        List<Map<String, Object>> mapList = questionDao.selectMaps(queryWrapper);
+
+        return mapList;
     }
 
 }

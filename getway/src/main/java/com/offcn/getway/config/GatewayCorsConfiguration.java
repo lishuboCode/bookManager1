@@ -1,5 +1,6 @@
 package com.offcn.getway.config;
 
+import com.offcn.getway.filter.JwtCheckGatewayFilterFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -22,5 +23,9 @@ public class GatewayCorsConfiguration {
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsWebFilter(source);
+    }
+    @Bean
+    public JwtCheckGatewayFilterFactory jwtCheckGatewayFilterFactory(){
+        return new JwtCheckGatewayFilterFactory();
     }
 }

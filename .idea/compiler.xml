@@ -13,6 +13,7 @@
         <module name="context" />
         <module name="member" />
         <module name="renren-fast" />
+        <module name="oss-service" />
         <module name="renren-generator" />
       </profile>
     </annotationProcessing>
@@ -23,6 +24,7 @@
       <module name="excel-poi" target="8" />
       <module name="getway" target="1.8" />
       <module name="member" target="1.8" />
+      <module name="oss-service" target="1.8" />
       <module name="question" target="1.8" />
       <module name="renren-fast" target="1.8" />
       <module name="renren-generator" target="1.8" />
@@ -35,6 +37,7 @@
       <module name="excel-poi" options="-parameters" />
       <module name="getway" options="-parameters" />
       <module name="member" options="-parameters" />
+      <module name="oss-service" options="-parameters" />
       <module name="question" options="-parameters" />
       <module name="renren-fast" options="-parameters" />
       <module name="renren-generator" options="-parameters" />

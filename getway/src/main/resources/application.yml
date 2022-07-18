@@ -19,14 +19,27 @@ spring:
             - Path=/api/question/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: weixin-login-ums-route # 提供微信客户端调用的，用户微服务路由
+          uri: lb://member
+          predicates:
+            - Path=/member/member/login/**
+          filters:
+            - RewritePath=/(?<segment>.*),/$\{segment}
+        - id: weixin-test-ums-route # 提供微信客户端调用的，用户微服务路由
+          uri: lb://member
+          predicates:
+            - Path=/member/member/refreshtoken/**
+          filters:
+            - RewritePath=/(?<segment>.*),/$\{segment}
+            - JwtCheck
         - id: ums-route # 用户微服务路由
           uri: lb://member
           predicates:
             - Path=/api/member/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
-        - id: oss-route # oss服务路由
-          uri: lb://oss
+        - id: oss-service
+          uri: lb://oss-service
           predicates:
             - Path=/api/thirdparty/**
           filters:
@@ -37,5 +50,12 @@ spring:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+        - id: oss-route # oss服务路由
+          uri: lb://oss-service
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
   application:
     name: gateway

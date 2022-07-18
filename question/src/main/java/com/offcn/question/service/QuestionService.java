@@ -25,5 +25,8 @@ public interface QuestionService extends IService<QuestionEntity> {
     public Map importExcel(MultipartFile file);
     //导出
     public Workbook exportExcel();
+
+    //    查询条数
+    List<Map<String, Object>> countTypeNum();
 }
 
